@@ -1,5 +1,5 @@
 const Apod = require("../models/apod");
-const { model, collection } = require("../models/apod");
+const { apodSchema } = require("../models/apod");
 const https = require("https");
 const mongoose = require("mongoose");
 
@@ -28,11 +28,12 @@ exports.createApod = (req, res) => {
         const apod = new Apod(JSON.parse(data));
         console.log(JSON.parse(data).url);
 
-        mongoose.model("Apod").findOne({ url: JSON.parse(data).url }),
+        var apodModel = mongoose.model("Apod", apodSchema)
+
+        apodModel.findOne({ url: JSON.parse(data).url },
           function (err, result) {
-            console.log("entrou aqui");
             if (!result) {
-              console.log("nao existe");
+              console.log("nao existe");    
               apod.save().then((result) =>
                 res.status(200).json({
                   apod: result,
@@ -42,7 +43,7 @@ exports.createApod = (req, res) => {
               res.send({ message: "Ja existe" });
             }
             if (err) console.log("Erro " + err);
-          };
+          });
       });
     })
     .on("error", (err) => {
