@@ -3,7 +3,7 @@ const { createApod, getApods } = require('../controllers/nasacontroller')
 
 const router = express.Router()
 
-router.getApods('/nasa/getapods', getApods)
-router.postApod('/nasa/postapod', createApod)
+router.get('/', getApods)
+router.post('/nasa/createApod', createApod)
 
 module.exports = router

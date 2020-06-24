@@ -21,7 +21,7 @@ const nasaRoutes = require('./routes/nasa')
 
 app.use(morgan("dev"))
 app.use(bodyParser.json())
-app.use("/nasa",nasaRoutes)
+app.use("/", nasaRoutes)
 
 const port = process.env.PORT || 8080
 
