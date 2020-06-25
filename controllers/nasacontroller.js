@@ -33,14 +33,14 @@ exports.createApod = (req, res) => {
         apodModel.findOne({ url: JSON.parse(data).url },
           function (err, result) {
             if (!result) {
-              console.log("nao existe");    
+              console.log("Não existe.");    
               apod.save().then((result) =>
                 res.status(200).json({
                   apod: result,
                 })
               );
             } else {
-              res.send({ message: "Ja existe" });
+              res.send({ message: "Já existe." });
             }
             if (err) console.log("Erro " + err);
           });
