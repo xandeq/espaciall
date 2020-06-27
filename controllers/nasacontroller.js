@@ -13,8 +13,13 @@ exports.getApods = (req, res) => {
 };
 
 exports.createApod = (req, res) => {
+
+  var data = dataAleatoria();
+
   const url =
-    "https://api.nasa.gov/planetary/apod?api_key=BzCHxf3K4h1enx5cUDETYFuGaexAd9NaOib69ZKy&date=2020-06-22";
+    "https://api.nasa.gov/planetary/apod?api_key=BzCHxf3K4h1enx5cUDETYFuGaexAd9NaOib69ZKy&start_date=" + data[0] + "&end_date" + data[1];
+
+    console.log(url);
 
   https
     .get(url, (resp) => {
@@ -26,26 +31,61 @@ exports.createApod = (req, res) => {
 
       resp.on("end", () => {
         const apod = new Apod(JSON.parse(data));
-        console.log(JSON.parse(data).url);
+        //console.log(JSON.parse(data).url);
+        console.log(apod);
+        console
 
-        mongoose.model("Apod").findOne({ url: JSON.parse(data).url }),
-          function (err, result) {
-            console.log("entrou aqui");
-            if (!result) {
-              console.log("nao existe");
-              apod.save().then((result) =>
-                res.status(200).json({
-                  apod: result,
-                })
-              );
-            } else {
-              res.send({ message: "Ja existe" });
-            }
-            if (err) console.log("Erro " + err);
-          };
+        // mongoose.model("Apod").findOne({ url: JSON.parse(data).url },
+        //   function (err, result) {
+        //     if (!result) {
+        //       console.log("Não existe.");
+        //       apod.save().then((result) =>
+        //         res.status(200).json({
+        //           apod: result,
+        //         })
+        //       );
+        //     } else {
+        //       res.send({ message: "Já existe essa imagem no banco de dados." });
+        //     }
+        //     if (err) console.log("Erro: " + err);
+        //   });
       });
     })
     .on("error", (err) => {
       console.log("Error " + err.message);
     });
 };
+
+
+function dataAleatoria(){
+  var datas = [];
+
+  var hoje = new Date();
+  //var ultimoDiaMes = new Date(hoje.getFullYear(), hoje.getMonth()+1, 0)
+
+  var mes = Math.floor(Math.random()*06)+1;
+  var dia = Math.floor(Math.random()*26)+1;
+  var ano = 2020;
+
+  var datainicio = new Date(ano, mes, dia);
+  var datafim = new Date();
+  console.log(datafim)
+  datafim = datainicio.setDate(datainicio.getDate() + 10);
+  console.log(datafim)
+
+  // console.log(datainicio)
+  // console.log(datafim)
+  
+  // var dataInicioFormatada =  datainicio.getFullYear() + '-' + datainicio.getMonth() + '-' + (datainicio.getDate().padStart(2,'0'))
+  // console.log(dataInicioFormatada)
+  // var dataFimFormatada = datafim.getFullYear() + '-' + datafim.getMonth() + '-' + datafim.getDate()
+  // console.log(dataFimFormatada)
+
+  datas = [datainicio, datafim];
+  
+  return datas;
+}
+
+Date.prototype.addDays = function(days){
+  var date = new Date(this.valueOf)
+}
